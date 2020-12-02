@@ -17,11 +17,6 @@ The accumulator state is: [[x,a]]
 --------------------------------------
 x accepts proposal from b and displaces a
 --------------------------------------
-a is proposing to x
-The accumulator state is: [[x,b]]
---------------------------------------
-x rejects proposal from a
---------------------------------------
 a is proposing to y
 The accumulator state is: [[x,b]]
 --------------------------------------

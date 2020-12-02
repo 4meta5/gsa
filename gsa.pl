@@ -37,6 +37,11 @@ gsa(Goal,R) :-
     border,write('Proposers with preferences: '),write(PRK),nl,
     write('Accepters: '),write(Accepters),nl,write('Accepter preferences: '),write(AccepterRks),nl,
     run(Accepters,PRK,[],R).
+del(X,[X|T],T).
+del(X,[Y|T],[Y|T2]) :-
+    del(X,T,T2).
+insert(X,L,L2) :-
+    del(X,L2,L).
 /*run(Unpaired,ProposersWithRkings,Accumulator,ResultPairs)*/
 run(_,[],R,R).
 run(U,[[_,[]]|P],S,R) :- run(U,P,S,R).
@@ -47,11 +52,13 @@ run(Unp,[[P,[X|Z]]|Props],Prs,R) :-
         del([X,XX],Unp,Unp2),write('New unpaired state is: '),write(Unp2),nl,run(Unp2,Props,Pr2,R);
     member([X,CP],Prs) -> 
             (prefer(X,P,CP) -> border,write(X),write(' accepts proposal from '),write(P),write(' and displaces '),write(CP),nl,
-                prefs(CP,Y),insert([CP,Y],Props,Prop2),del([X,CP],Prs,Pr2),insert([X,P],Pr2,Pr3),run(Unp,Prop2,Pr3,R);
+                prefs(CP,Y),del(X,Y,W),insert([CP,W],Props,Prop2),del([X,CP],Prs,Pr2),insert([X,P],Pr2,Pr3),run(Unp,Prop2,Pr3,R);
             border,write(X),write(' rejects proposal from '),write(P),nl,run(Unp,[[P,Z]|Props],Prs,R));
     run(Unp,[[P,Z]|Props],Prs,R)).
-del(X,[X|T],T).
-del(X,[Y|T],[Y|T2]) :-
-    del(X,T,T2).
-insert(X,L,L2) :-
-    del(X,L2,L).
+
+/*
+unstable([A,B],[C,D],Marriage) :-
+    member([A,B],Marriage),
+    member([C,D],Marriage),
+    (prefer(A,D,B) -> prefer(D,A,C);
+    prefer(B,C,A) -> prefer(C,B,A)).*/
