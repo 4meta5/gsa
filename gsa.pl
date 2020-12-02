@@ -10,9 +10,9 @@ app(A):-apps(X),member(A,X).
 slot(A):-slots(X),member(A,X).
 
 prefs(a,[x,y,z]).
-prefs(b,[x,y,z]).
+prefs(b,[y,x,z]).
 prefs(c,[z,x,y]).
-prefs(x,[b,a,c]).
+prefs(x,[a,b,c]).
 prefs(y,[b,a,c]).
 prefs(z,[c,a,b]).
 
@@ -55,10 +55,15 @@ run(Unp,[[P,[X|Z]]|Props],Prs,R) :-
                 prefs(CP,Y),del(X,Y,W),insert([CP,W],Props,Prop2),del([X,CP],Prs,Pr2),insert([X,P],Pr2,Pr3),run(Unp,Prop2,Pr3,R);
             border,write(X),write(' rejects proposal from '),write(P),nl,run(Unp,[[P,Z]|Props],Prs,R));
     run(Unp,[[P,Z]|Props],Prs,R)).
-
-/*
-unstable([A,B],[C,D],Marriage) :-
-    member([A,B],Marriage),
-    member([C,D],Marriage),
-    (prefer(A,D,B) -> prefer(D,A,C);
-    prefer(B,C,A) -> prefer(C,B,A)).*/
+is_stable([[_,_]]).
+is_stable([[X,Y]|T]) :-
+    length(T,N),N>0,length(L1,N),
+    maplist(=([X,Y]),L1),
+    maplist(stable,L1,T),
+    is_stable(T).
+stable([A,B],[C,D]) :-
+    prefer(A,D,B) -> prefer(D,C,A);
+    prefer(D,A,C) -> prefer(A,B,D);
+    prefer(B,C,A) -> prefer(C,D,B);
+    prefer(C,B,D) -> prefer(B,A,C);
+    true.

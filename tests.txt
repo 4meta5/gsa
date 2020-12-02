@@ -59,3 +59,10 @@ The accumulator state is: [[b,x],[a,y]]
 New accumulator state is: [[b,x],[a,y],[c,z]]
 New unpaired state is: []
 R = [[b, x], [a, y], [c, z]] .
+
+?- is_stable([[x, a], [y, b], [z, c]]).
+true .
+?- is_stable([[x, b], [y, a], [z, c]]).
+false.
+?- is_stable([[x, c], [y, b], [z, a]]).
+false.
