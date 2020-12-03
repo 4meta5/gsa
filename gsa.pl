@@ -10,11 +10,12 @@ app(A):-apps(X),member(A,X).
 slot(A):-slots(X),member(A,X).
 
 prefs(a,[x,y,z]).
-prefs(b,[y,x,z]).
-prefs(c,[z,x,y]).
+prefs(b,[x,y,z]).
+prefs(c,[z,y,x]).
 prefs(x,[a,b,c]).
 prefs(y,[b,a,c]).
-prefs(z,[c,a,b]).
+prefs(z,[c,b,a]).
+rprefs(Goal,X) :- inv(Goal,Other),agent(Other,L),random_permutation(L,X).
 
 prefer(Who,Yes,No) :-
     prefs(Who,Rank),member(Yes,Rank),not(member(No,Rank)).
