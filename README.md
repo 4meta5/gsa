@@ -93,9 +93,9 @@ false.
 false.
 ```
 
-### Stability
+### Stable Matching Problem
 
-**TODO: define stability in context**
+More formally, the input of the stable matching problem is two sets of equal length. Traditionally, `n` men and `n` women. A matching between the sets is stable when there does not exist any pair (A,B) which both prefer each other to their current partner under the matching. When there is a bijection between input sets, a stable matching always exists and Gale-Shapley yields an algorithmic solution.
 
 Change `b` preferences to `[x,y,z]` changes nothing.
 ```prolog
@@ -119,7 +119,7 @@ false.
 false.
 ```
 
-Why? By the Gale-Shapley Algorithm, each proposer proposes to their highest remaining preference, in order, until they are paired or no preferences remains (in the current implementation, unpairable proposers are *tossed*, but they are also an impossibility if there is a bijection between proposer and accepter sets (proof is not *exercise*, go outside for exercise)).
+Why? Each proposer proposes to their highest remaining preference, in order, until they are paired or no preferences remains (in the current implementation, unpairable proposers are *tossed*, but they are also an impossibility if there is a bijection between proposer and accepter sets).
 
 ```
 ?- gsa(app,R).
@@ -284,7 +284,7 @@ R = [[a, x], [b, y], [c, z]] .
 
 What changes must be made to the preferences to change the output of the gale-shapley algorithm? There must be two pairs in which members of the opposite set prefer each other to their current paired partner. 
 
-For example, if I configure the preferences so that `a` prefers `y` and `y` prefers `a`, then output changes regardless of the proposal order.
+For example, if we configure the preferences so that `a` prefers `y` and `y` prefers `a`, then output changes regardless of the proposal order.
 
 ```
 ?- gsa(app,R).
@@ -361,8 +361,8 @@ true .
 false.
 ```
 
-### Guesses,Questions
+### Conclusions
 
-* order does matter for proposals -- if all elements of a set share the exact same preferences, their order defines the index of the other they will be matched with under the algorithm
+The Gale-Shapley Algorithm yields a stable matching that is best for the proposer set. The set of all stable matchings is computed by collecting the result for all possible inputs i.e. `slot` and `app`. This solution set forms a distributive [lattice of stable matchings](https://en.wikipedia.org/wiki/Lattice_of_stable_matchings).
 
-> when does the preference configuration produce different pairs? more specifically, when does order of actors lead to different output for the same `app` and `slot`?
+If all elements of a set share the same preferences, the `gsa` output will pair the `ith` input element with their `i`th preference (so order of proposers matters and can influence pairings).
