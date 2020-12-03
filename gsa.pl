@@ -10,11 +10,12 @@ app(A):-apps(X),member(A,X).
 slot(A):-slots(X),member(A,X).
 
 prefs(a,[x,y,z]).
-prefs(b,[x,y,z]).
-prefs(c,[z,x,y]).
-prefs(x,[b,a,c]).
+prefs(b,[y,x,z]).
+prefs(c,[z,y,x]).
+prefs(x,[a,b,c]).
 prefs(y,[b,a,c]).
-prefs(z,[c,a,b]).
+prefs(z,[c,b,a]).
+rprefs(Goal,X) :- inv(Goal,Other),agent(Other,L),random_permutation(L,X).
 
 prefer(Who,Yes,No) :-
     prefs(Who,Rank),member(Yes,Rank),not(member(No,Rank)).
@@ -37,6 +38,11 @@ gsa(Goal,R) :-
     border,write('Proposers with preferences: '),write(PRK),nl,
     write('Accepters: '),write(Accepters),nl,write('Accepter preferences: '),write(AccepterRks),nl,
     run(Accepters,PRK,[],R).
+del(X,[X|T],T).
+del(X,[Y|T],[Y|T2]) :-
+    del(X,T,T2).
+insert(X,L,L2) :-
+    del(X,L2,L).
 /*run(Unpaired,ProposersWithRkings,Accumulator,ResultPairs)*/
 run(_,[],R,R).
 run(U,[[_,[]]|P],S,R) :- run(U,P,S,R).
@@ -47,11 +53,18 @@ run(Unp,[[P,[X|Z]]|Props],Prs,R) :-
         del([X,XX],Unp,Unp2),write('New unpaired state is: '),write(Unp2),nl,run(Unp2,Props,Pr2,R);
     member([X,CP],Prs) -> 
             (prefer(X,P,CP) -> border,write(X),write(' accepts proposal from '),write(P),write(' and displaces '),write(CP),nl,
-                prefs(CP,Y),insert([CP,Y],Props,Prop2),del([X,CP],Prs,Pr2),insert([X,P],Pr2,Pr3),run(Unp,Prop2,Pr3,R);
+                prefs(CP,Y),del(X,Y,W),insert([CP,W],Props,Prop2),del([X,CP],Prs,Pr2),insert([X,P],Pr2,Pr3),run(Unp,Prop2,Pr3,R);
             border,write(X),write(' rejects proposal from '),write(P),nl,run(Unp,[[P,Z]|Props],Prs,R));
     run(Unp,[[P,Z]|Props],Prs,R)).
-del(X,[X|T],T).
-del(X,[Y|T],[Y|T2]) :-
-    del(X,T,T2).
-insert(X,L,L2) :-
-    del(X,L2,L).
+is_stable([[_,_]]).
+is_stable([[X,Y]|T]) :-
+    length(T,N),N>0,length(L1,N),
+    maplist(=([X,Y]),L1),
+    maplist(stable,L1,T),
+    is_stable(T).
+stable([A,B],[C,D]) :-
+    prefer(A,D,B) -> prefer(D,C,A);
+    prefer(D,A,C) -> prefer(A,B,D);
+    prefer(B,C,A) -> prefer(C,D,B);
+    prefer(C,B,D) -> prefer(B,A,C);
+    true.
