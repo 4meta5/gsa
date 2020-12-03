@@ -10,7 +10,7 @@ app(A):-apps(X),member(A,X).
 slot(A):-slots(X),member(A,X).
 
 prefs(a,[x,y,z]).
-prefs(b,[x,y,z]).
+prefs(b,[y,x,z]).
 prefs(c,[z,y,x]).
 prefs(x,[a,b,c]).
 prefs(y,[b,a,c]).
