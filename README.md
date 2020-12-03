@@ -365,4 +365,4 @@ false.
 
 The Gale-Shapley Algorithm yields a stable matching that is best for the proposer set. The set of all stable matchings is computed by collecting the result for all possible inputs i.e. `slot` and `app`. This solution set forms a distributive [lattice of stable matchings](https://en.wikipedia.org/wiki/Lattice_of_stable_matchings).
 
-If all elements of a set share the same preferences, the `gsa` output will pair the `ith` input element with their `i`th preference (so order of proposers matters and can influence pairings).
+*Guess*: If all elements of a set share the same preferences, the `gsa` output will pair the `i`th input element with their `i`th preference (so order of proposers matters and can influence pairings).

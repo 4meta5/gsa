@@ -15,7 +15,6 @@ prefs(c,[z,y,x]).
 prefs(x,[a,b,c]).
 prefs(y,[b,a,c]).
 prefs(z,[c,b,a]).
-rprefs(Goal,X) :- inv(Goal,Other),agent(Other,L),random_permutation(L,X).
 
 prefer(Who,Yes,No) :-
     prefs(Who,Rank),member(Yes,Rank),not(member(No,Rank)).
@@ -23,8 +22,6 @@ prefer(Who,Yes,No) :-
     prefs(Who,Rank),member(Yes,Rank),member(No,Rank),
     append(_,[Yes|Rest],Rank),
     member(No,Rest).
-pair([A,B]) :- app(A),slot(B).
-all_pairs(R) :- findall([A,B],pair([A,B]),R).
 all_free(Goal,R) :-
     agent(Goal,_),
     findall([A,om],(call(Goal,A)),R).
